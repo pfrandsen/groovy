@@ -87,9 +87,9 @@ class CompareAndCleanup {
         }
         String[] files = folder.list()
         if (files != null && files.length == 0) {
-            println "LOG INFO: Deleting '${folder}'"
+            log.info("Deleting '${folder}'")
             if (!folder.delete()) {
-                println "LOG ERROR: Could not delete '${folder}'"
+                log.log(Level.WARNING, "Could not delete '${folder}'")
             }
         }
     }
