@@ -1,10 +1,13 @@
 package filesystem.util
 
+import groovy.util.logging.*
+
 import org.apache.commons.cli.Option
 
+@Log
 class BetaSchemaCleanup {
-    private static String productionSchemasRoot = "../../../test/resource/SchemaServer/prod_schemas"
-    private static String betaSchemasRoot = "../../../test/resource/SchemaServer/beta_schemas"
+    private static String productionSchemasRoot = "target/SchemaServer/prod_schemas"
+    private static String betaSchemasRoot = "target/SchemaServer/beta_schemas"
     private static String[] folders = ["concept", "technical", "external"]
 
     private static void processArguments(def options) {
@@ -17,6 +20,10 @@ class BetaSchemaCleanup {
         if (options.f) {
             folders = options.fs // 's' needs to be added to get all values and not just the first
         }
+    }
+
+    private static String getCanonicalPath(String path) {
+        return new File(path).canonicalPath
     }
 
     private static CliBuilder commandlineParser() {
@@ -41,8 +48,8 @@ class BetaSchemaCleanup {
             return
         }
         processArguments(options)
-        CompareAndCleanup runner = new CompareAndCleanup(productionSchemasRoot, betaSchemasRoot, folders)
+        CompareAndCleanup runner = new CompareAndCleanup(getCanonicalPath(productionSchemasRoot), getCanonicalPath(betaSchemasRoot), folders)
         runner.doCleanup()
-        System.out.println("Deleted ${runner.filesDeleted} files and ${runner.foldersDeleted} folders.")
+        log.info("Deleted ${runner.filesDeleted} file${runner.filesDeleted == 1 ? '' : 's'} and ${runner.foldersDeleted} folder${runner.foldersDeleted == 1 ? '' : 's'}.")
     }
 }
