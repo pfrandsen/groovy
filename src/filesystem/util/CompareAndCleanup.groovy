@@ -10,6 +10,20 @@ class CompareAndCleanup {
     private String mastersRoot = ""
     private String clonesRoot = ""
     private String[] folders = []
+    private int filesDeleted = 0
+    private int foldersDeleted = 0
+
+    int getFilesDeleted() {
+        return filesDeleted
+    }
+
+    int getFoldersDeleted() {
+        return foldersDeleted
+    }
+
+    public void doCleanup() {
+
+    }
 
     CompareAndCleanup(String mastersRoot, String clonesRoot, String[] folders) {
         this.mastersRoot = mastersRoot
@@ -17,6 +31,4 @@ class CompareAndCleanup {
         this.folders = folders
     }
 
-    public static void main(String[] args) {
-    }
 }
