@@ -4,6 +4,8 @@ import groovy.util.logging.*
 
 import org.apache.commons.cli.Option
 
+import java.util.logging.Level
+
 @Log
 class BetaSchemaCleanup {
     private static String productionSchemasRoot = "target/SchemaServer/prod_schemas"
@@ -50,6 +52,10 @@ class BetaSchemaCleanup {
         processArguments(options)
         CompareAndCleanup runner = new CompareAndCleanup(getCanonicalPath(productionSchemasRoot), getCanonicalPath(betaSchemasRoot), folders)
         runner.doCleanup()
-        log.info("Deleted ${runner.filesDeleted} file${runner.filesDeleted == 1 ? '' : 's'} and ${runner.foldersDeleted} folder${runner.foldersDeleted == 1 ? '' : 's'}.")
+        log.info("Deleted ${runner.foldersDeleted} folder${runner.foldersDeleted == 1 ? '' : 's'} of ${runner.cloneFolderCount} in ${betaSchemasRoot}[${folders.join(',')}].")
+        log.info("Deleted ${runner.filesDeleted} file${runner.filesDeleted == 1 ? '' : 's'} of ${runner.cloneFileCount} in ${betaSchemasRoot}[${folders.join(',')}].")
+        if (runner.deleteFailures > 0) {
+            log.log(Level.WARNING, "${runner.deleteFailures} ${runner.deleteFailures == 1 ? 'file/folder' : 'files/folders'} could not be deleted.")
+        }
     }
 }
